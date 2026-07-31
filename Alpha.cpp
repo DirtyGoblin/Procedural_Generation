@@ -8,6 +8,11 @@ const int blockSize = 16;
 const int spacing = 16;
 const float cellSize = 10.f;
 
+float fade(float t)
+{
+    return t * t * t * (t * (t * 6 - 15) + 10);
+}
+
 float lerp(float a, float b, float t)
     {
         return a + (b-a)*t;
@@ -15,6 +20,16 @@ float lerp(float a, float b, float t)
 
 void generateTerrain(float heightMap[ROWS][COLS])
 {
+    /*for (int x = 0; x < COLS; x++)
+    {
+        for (int y = 0; y < ROWS; y++)
+        {
+            heightMap[y][x] = static_cast<float>(rand()) / RAND_MAX;
+        }
+    }*/
+
+
+
     const int CONTROL_ROWS = ROWS / blockSize + 1;
     const int CONTROL_COLS = COLS / blockSize + 1;
 
@@ -39,8 +54,8 @@ void generateTerrain(float heightMap[ROWS][COLS])
             {
             for(int x=0;x<spacing;x++)
                 {
-                float tx = x / float(blockSize-1);
-                float ty = y / float(blockSize-1);
+                float tx = fade(x / float(blockSize-1));
+                float ty = fade(y / float(blockSize-1));
 
                 float A = control[cy][cx];
                 float B = control[cy][cx + 1];
@@ -101,8 +116,7 @@ int main()
                     row * cellSize
                 });
                 
-            //float height = grid[row][col] / 256.f;
-              // int green = height * 255;
+            
 cell.setFillColor(sf::Color(
     static_cast<std::uint8_t>(heightMap[row][col] * 255.f),
     static_cast<std::uint8_t>(heightMap[row][col] * 255.f),
